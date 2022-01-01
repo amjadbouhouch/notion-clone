@@ -3,7 +3,7 @@ import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { AppContext } from "./contexts/AppContext";
 import usePages from "./hooks/usePages";
 import Header from "./Layout/Header";
-import DataBase from "./Layout/DataBase";
+import PageContent from "./Layout/PageContent";
 import SideBar from "./Layout/SideBar";
 
 function App() {
@@ -13,7 +13,7 @@ function App() {
   return (
     <AppContext.Provider value={props}>
       <BrowserRouter>
-        <div className="w-screen flex flex-1 h-screen text-sm">
+        <div className="w-screen flex flex-1 h-screen">
           <SideBar
             isSidebarOpen={isSidebarOpen}
             toggleSideBar={toggleSideBar}
@@ -25,9 +25,11 @@ function App() {
             </Route>
             <Route path={`/:id`}>
               <div className="flex flex-1 flex-col">
-                <Header />
-
-                <DataBase />
+                <Header
+                  isSidebarOpen={isSidebarOpen}
+                  toggleSideBar={toggleSideBar}
+                />
+                <PageContent />
               </div>
             </Route>
           </Switch>

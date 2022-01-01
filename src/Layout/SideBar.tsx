@@ -1,7 +1,5 @@
-import React from "react";
 import {
   ChevronDoubleLeftIcon,
-  ChevronDownIcon,
   ChevronRightIcon,
   ClockIcon,
   CogIcon,
@@ -11,10 +9,10 @@ import {
   SearchIcon,
 } from "@heroicons/react/outline";
 import { company } from "faker";
+import React from "react";
 import { NavLink } from "react-router-dom";
 import { useAppContext } from "../hooks/useAppContext";
 import { Page } from "../types";
-import { Disclosure } from "@headlessui/react";
 interface SideBarProps {
   isSidebarOpen: boolean;
   toggleSideBar: () => void;
@@ -25,7 +23,7 @@ export default function SideBar({
 }: SideBarProps): JSX.Element {
   return (
     <div
-      className={`flex   flex-shrink-0 flex-col h-full bg-gray-100 text-sm transition-all duration-300 shadow-sm ${
+      className={`flex  text-sm flex-shrink-0 flex-col h-full bg-gray-100transition-all duration-300 shadow-sm ${
         isSidebarOpen ? "w-96" : "hidden"
       }`}
     >

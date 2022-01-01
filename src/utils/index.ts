@@ -13,7 +13,7 @@ export function generatePage(): Page {
   const randomId = generateId();
   return {
     _id: randomId,
-    blocks: Array.from({ length: 20 }).map(generateBlock),
+    blocks: Array.from({ length: 0 }).map(generateBlock),
     name: company.bsNoun(),
   };
 }
@@ -21,5 +21,7 @@ export function generatePage(): Page {
 export function generateBlock(): Block {
   return {
     _id: generateId(),
+    content: "",
+    type: "heading",
   };
 }
