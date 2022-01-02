@@ -2,6 +2,7 @@ export interface Page {
   blocks: Block[];
   _id: string;
   name: string;
+  description?: string;
   // icon ....
 }
 type Type = "paragraph" | "heading" | "todo" | "image";

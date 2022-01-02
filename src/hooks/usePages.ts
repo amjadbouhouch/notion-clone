@@ -59,6 +59,16 @@ export default function usePages() {
       return draft;
     });
   };
+  const updateDescription = (pageId, description) => {
+    setPages((prev) => {
+      let draft = [...prev];
+      const pageIndex = draft.findIndex((p) => p._id === pageId);
+      if (~pageIndex) {
+        if (draft[pageIndex]) draft[pageIndex].description = description;
+      }
+      return draft;
+    });
+  };
 
   return {
     pages,
@@ -66,5 +76,6 @@ export default function usePages() {
     AddBlock,
     updateBlockContent,
     updateTitle,
+    updateDescription,
   };
 }

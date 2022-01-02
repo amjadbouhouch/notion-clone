@@ -1,8 +1,7 @@
 import { HomeIcon } from "@heroicons/react/outline";
-import { useEffect, useRef } from "react";
-import ContentEditable from "react-contenteditable";
 import { useParams } from "react-router";
 import BLockItem from "../components/BLockItem";
+import Editable from "../components/Editable";
 import { useAppContext } from "../hooks/useAppContext";
 import useSelectedPage from "../hooks/useSelectedPage";
 import "./style.css";
@@ -27,46 +26,40 @@ export default function PageContent() {
 }
 const HeaderSection = () => {
   const selectedPage = useSelectedPage();
-  const { updateTitle } = useAppContext();
-  const text = useRef(selectedPage?.name || "");
-  const handleChange = (e) => {
-    const newTitle = e.target.value;
-    text.current = newTitle;
-    updateTitle(selectedPage!._id, newTitle);
+  const { updateTitle, updateDescription } = useAppContext();
+
+  const handleChange = (html: string) => {
+    updateTitle(selectedPage!._id, html);
   };
-  useEffect(() => {
-    if (!selectedPage?.name) return;
-    text.current = selectedPage!.name;
-  }, [selectedPage]);
+  const handleChangeDescription = (html: string) => {
+    updateDescription(selectedPage!._id, html);
+  };
+
   return (
     <div>
       {/* cover */}
-      <div className="h-40 group relative bg-slate-800 w-full">
+      <div className="relative w-full h-40 group bg-slate-800">
         {/* icon */}
-        <div className="absolute -bottom-5 bg-white p-1 rounded-md left-20">
+        <div className="absolute p-1 bg-white rounded-md -bottom-5 left-20">
           <HomeIcon className="w-16 h-16 text-gray-600" />
         </div>
-        <div className="absolute cursor-pointer hidden group-hover:flex bottom-5 bg-white px-2 py-1 rounded-md right-10">
+        <div className="absolute hidden px-2 py-1 bg-white rounded-md cursor-pointer group-hover:flex bottom-5 right-10">
           <div className="text-xs text-gray-500">Change cover</div>
         </div>
       </div>
       {/* title */}
-      <div className="mt-10 px-20 flex flex-col">
-        <ContentEditable
-          className="w-full h-auto text-3xl outline-0"
-          html={text.current}
-          placeholder={"Untitled"}
-          // onBlur={props.handleOnBlur}
-          // onKeyDown={this.props.onKeyDown}
-          disabled={false} // use true to disable editing
-          onChange={handleChange} // handle innerHTML change
+      <div className="flex flex-col px-20 mt-10">
+        <Editable
+          tagName="heading"
+          html={selectedPage?.name || ""}
+          handleChange={handleChange}
         />
-        <label className="text-sm text-gray-500">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia
-          cumque laboriosam dolorem accusamus odio doloremque perspiciatis
-          deserunt, consequatur labore. Modi sequi consequatur cupiditate magni
-          eos tempore facere laboriosam autem dolore.
-        </label>
+        <Editable
+          tagName="paragraph"
+          classNames="text-gray-500"
+          html={selectedPage?.description || ""}
+          handleChange={handleChangeDescription}
+        />
       </div>
     </div>
   );

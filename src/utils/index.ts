@@ -15,6 +15,10 @@ export function generatePage(): Page {
     _id: randomId,
     blocks: Array.from({ length: 1 }).map(generateBlock),
     name: company.bsNoun(),
+    description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia
+    cumque laboriosam dolorem accusamus odio doloremque perspiciatis
+    deserunt, consequatur labore. Modi sequi consequatur cupiditate magni
+    eos tempore facere laboriosam autem dolore.`,
   };
 }
 
