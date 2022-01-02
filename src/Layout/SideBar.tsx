@@ -12,6 +12,7 @@ import { company } from "faker";
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useAppContext } from "../hooks/useAppContext";
+
 import { Page } from "../types";
 interface SideBarProps {
   isSidebarOpen: boolean;
@@ -87,37 +88,10 @@ interface PageItemProps {
   page: Page;
   index: number;
 }
-const PageItem = ({ page: { _id, name } }: PageItemProps) => {
-  // return (
-  //   <Disclosure>
-  //     {({ open }) => (
-  //       <>
-  //         <Disclosure.Button
-  //           as="div"
-  //           className="px-3 group flex items-center text-gray-700 justify-between py-1 hover:bg-gray-200 hover:cursor-pointer"
-  //         >
-  //           <div className="space-x-2 items-center flex">
-  //             {!open ? (
-  //               <ChevronRightIcon className="w-4 h-4" />
-  //             ) : (
-  //               <ChevronDownIcon className="w-4 h-4" />
-  //             )}
-  //             <span className="capitalize">{name}</span>
-  //           </div>
-  //           <div className="hidden group-hover:flex items-center space-x-2">
-  //             <DotsHorizontalIcon className="w-4 h-4" />
-  //             <PlusIcon className="w-4 h-4" />
-  //           </div>
-  //         </Disclosure.Button>
-  //         <Disclosure.Panel></Disclosure.Panel>
-  //       </>
-  //     )}
-  //   </Disclosure>
-  // );
+const PageItem = ({ page: { _id, name }, index }: PageItemProps) => {
   return (
     <NavLink
       to={`/${_id}`}
-      onClick={() => {}}
       activeClassName={"bg-gray-200"}
       style={{ textDecoration: "none" }}
       className={

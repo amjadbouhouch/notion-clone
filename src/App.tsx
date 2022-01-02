@@ -1,11 +1,10 @@
-import React, { lazy, Suspense, useState } from "react";
+import React, { Suspense, useState } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import FallBackSuspense from "./components/FallBackSuspense";
 import { AppContext } from "./contexts/AppContext";
 import usePages from "./hooks/usePages";
-import Header from "./Layout/Header";
+import MainLayout from "./Layout/MainLayout";
 import SideBar from "./Layout/SideBar";
-const PageContent = lazy(() => import("./Layout/PageContent"));
 
 function App() {
   const props = usePages();
@@ -16,6 +15,7 @@ function App() {
       <AppContext.Provider value={props}>
         <BrowserRouter>
           <div className="w-screen flex flex-1 h-screen">
+            {/* Side bar */}
             <SideBar
               isSidebarOpen={isSidebarOpen}
               toggleSideBar={toggleSideBar}
@@ -26,13 +26,11 @@ function App() {
                 <Redirect to={`/${props.pages[0]._id}`} />
               </Route>
               <Route path={`/:id`}>
-                <div className="flex flex-1 flex-col">
-                  <Header
-                    isSidebarOpen={isSidebarOpen}
-                    toggleSideBar={toggleSideBar}
-                  />
-                  <PageContent />
-                </div>
+                {/* Main page header + page content */}
+                <MainLayout
+                  isSidebarOpen={isSidebarOpen}
+                  toggleSideBar={toggleSideBar}
+                />
               </Route>
               <Route exact path="/**">
                 <Redirect to="/" />

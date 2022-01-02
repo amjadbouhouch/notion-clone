@@ -49,10 +49,22 @@ export default function usePages() {
       return draft;
     });
   }
+  const updateTitle = (pageId, newTitle) => {
+    setPages((prev) => {
+      let draft = [...prev];
+      const pageIndex = draft.findIndex((p) => p._id === pageId);
+      if (~pageIndex) {
+        if (draft[pageIndex]) draft[pageIndex].name = newTitle;
+      }
+      return draft;
+    });
+  };
+
   return {
     pages,
     setPages,
     AddBlock,
     updateBlockContent,
+    updateTitle,
   };
 }

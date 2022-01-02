@@ -6,28 +6,22 @@ import {
   MenuIcon,
   StarIcon,
 } from "@heroicons/react/outline";
-import { useEffect, useMemo } from "react";
-import { useParams } from "react-router";
+import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { useAppContext } from "../hooks/useAppContext";
+import useSelectedPage from "../hooks/useSelectedPage";
 interface HeaderProps {
   isSidebarOpen: boolean;
   toggleSideBar: () => void;
 }
 /** */
 export default function Header({ isSidebarOpen, toggleSideBar }: HeaderProps) {
-  const { id } = useParams<{ id: string }>();
-  const { pages } = useAppContext();
+  const selectedPage = useSelectedPage();
   const history = useHistory();
   useEffect(() => {
-    let dataBase = pages.find((d) => d._id === id);
-    if (!dataBase) {
+    if (!selectedPage?._id) {
       history.push("/");
     }
-  }, [id]);
-  const selectedPage = useMemo(() => {
-    return pages.find((d) => d._id === id);
-  }, [id]);
+  }, [selectedPage?._id]);
   return (
     <div className={`flex text-sm p-3 justify-between shadow-sm`}>
       <div className="flex space-x-2 items-center">

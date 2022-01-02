@@ -1,20 +1,20 @@
 import { HandIcon, PlusIcon } from "@heroicons/react/outline";
-import { useEffect, useState } from "react";
-import usePages from "../hooks/usePages";
+import { useEffect, useRef, useState } from "react";
+import { useAppContext } from "../hooks/useAppContext";
+import useOnPressOutside from "../hooks/useOnPressOutside";
 import { Block } from "../types";
 import EditableHeading from "./Block/EditableHeading";
 import EditableParagraph from "./Block/EditableParagraph";
 interface BlockProps {
   index: number;
   block: Block;
-  pageIndex: number;
 }
 interface ICommandsPosition {
   isShowing: boolean;
   position: undefined | { x: number; y: number };
 }
-export default function BLockItem({ block, index, pageIndex }: BlockProps) {
-  const { updateBlockContent, AddBlock } = usePages();
+export default function BLockItem({ block, index }: BlockProps) {
+  const { updateBlockContent, AddBlock } = useAppContext();
   const [showCommands, setShowCommands] = useState<ICommandsPosition>({
     isShowing: false,
     position: undefined,
@@ -27,14 +27,14 @@ export default function BLockItem({ block, index, pageIndex }: BlockProps) {
     //     position: undefined,
     //   });
     // }
-    updateBlockContent(pageIndex, index, content);
+    // updateBlockContent(pageIndex, index, content);
   }
 
   const handleClick = (e) => {
     e.stopPropagation();
   };
   const handleOnBlur = () => {
-    AddBlock(pageIndex, true);
+    // AddBlock(pageIndex, true);
   };
   // const sanitizeConf = {
   //   allowedTags: ["b", "i", "em", "strong", "a", "p", "h1"],
@@ -43,6 +43,8 @@ export default function BLockItem({ block, index, pageIndex }: BlockProps) {
   useEffect(() => {
     // execute("formatBlock", "h1");
   }, []);
+  const closeMenu = () =>
+    setShowCommands({ isShowing: false, position: undefined });
   const openSelectMenuHandler = () => {
     const { x, y } = getCaretCoordinates(block._id);
     setShowCommands({
@@ -65,7 +67,9 @@ export default function BLockItem({ block, index, pageIndex }: BlockProps) {
 
   return (
     <div className="flex  items-center space-x-2 group px-10">
-      {showCommands.isShowing && <Menu position={showCommands.position} />}
+      {showCommands.isShowing && (
+        <Menu closeMenu={closeMenu} position={showCommands.position} />
+      )}
       <div className="w-12">
         <div className="hidden  group-hover:flex items-center space-x-2">
           <PlusIcon
@@ -99,13 +103,21 @@ export default function BLockItem({ block, index, pageIndex }: BlockProps) {
     </div>
   );
 }
-function Menu({ position }) {
+function Menu({ position, closeMenu }) {
+  const menuRef = useRef(null);
+  const { isClickedOutside } = useOnPressOutside(menuRef);
+  useEffect(() => {
+    if (isClickedOutside) {
+      closeMenu();
+    }
+  }, [isClickedOutside]);
   const style = {
     top: position?.y + 19,
     left: position?.x + 5,
   };
   return (
     <div
+      ref={menuRef}
       style={style}
       className="absolute bg-white text-sm w-72 rounded shadow-md border border-gray-200"
     >
