@@ -34,6 +34,9 @@ function App() {
                   <PageContent />
                 </div>
               </Route>
+              <Route exact path="/**">
+                <Redirect to="/" />
+              </Route>
             </Switch>
           </div>
         </BrowserRouter>

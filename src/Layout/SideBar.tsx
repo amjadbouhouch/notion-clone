@@ -17,13 +17,16 @@ interface SideBarProps {
   isSidebarOpen: boolean;
   toggleSideBar: () => void;
 }
+
+const randomCompanyName = company.companyName();
+
 export default function SideBar({
   isSidebarOpen = true,
   toggleSideBar,
 }: SideBarProps): JSX.Element {
   return (
     <div
-      className={`flex  text-sm flex-shrink-0 flex-col h-full bg-gray-100transition-all duration-300 shadow-sm ${
+      className={`flex  text-sm flex-shrink-0 flex-col h-full bg-gray-100 transition-all duration-300 shadow-sm ${
         isSidebarOpen ? "w-96" : "hidden"
       }`}
     >
@@ -33,7 +36,7 @@ export default function SideBar({
       >
         <div className="flex space-x-2 items-center">
           <EmojiHappyIcon className="w-4 h-4 text-gray-500" />
-          <span className="">{company.companyName()}</span>
+          <span className="">{randomCompanyName}</span>
         </div>
         <div>
           <ChevronDoubleLeftIcon className="w-4 h-4 hidden  group-hover:block" />

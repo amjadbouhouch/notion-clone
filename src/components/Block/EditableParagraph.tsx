@@ -1,16 +1,15 @@
 import React, { Component } from "react";
 import ContentEditable from "react-contenteditable";
-import { Block } from "../types";
-import "./style.css";
+import { Block } from "../../types";
+
 interface Props {
   block: Block;
   handleChange: (html: string) => void;
-  tagName?: "div" | "h2" | "pre" | "p";
   onKeyDown: (ev: any) => void;
   handleOnBlur: () => void;
 }
 /** should be a class component !! ;) */
-export default class EditableContent extends Component<Props, {}> {
+export default class EditableParagraph extends Component<Props, {}> {
   contentEditable;
   constructor(args) {
     super(args);
@@ -28,15 +27,14 @@ export default class EditableContent extends Component<Props, {}> {
         <ContentEditable
           id={this.props.block._id}
           onClick={this.onContentEditableClicked}
-          className="w-full border-b h-auto text-3xl outline-0 border-gray-100 rounded-sm"
+          className="w-full border-b h-auto text-sm outline-0 border-gray-100 rounded-sm"
           innerRef={this.contentEditable}
-          placeholder={"Untitled"}
+          placeholder={"Type '/' for commands"}
           onBlur={this.props.handleOnBlur}
           onKeyDown={this.props.onKeyDown}
           html={this.props.block.content} // innerHTML of the editable div
           disabled={false} // use true to disable editing
           onChange={this.handleChange} // handle innerHTML change
-          tagName={this.props?.tagName || "div"}
         />
       </div>
     );

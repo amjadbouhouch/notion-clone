@@ -1,15 +1,21 @@
 import { useState } from "react";
 import { Page } from "../types";
 import { generateBlock, generatePage } from "../utils/index";
-
+/** generate fake data */
 const FAKE_DATA = Array.from({ length: 10 }).map(generatePage);
+/** helper */
 const focusOnLastBlock = (id) => {
   document.getElementById(id)?.focus();
 };
+/** data */
 export default function usePages() {
   const [pages, setPages] = useState<Page[]>(FAKE_DATA);
-  // add new block to specific page
-  function AddBlock(pageIndex: number, force?: boolean) {
+  /**
+   *
+   * @param pageIndex: number
+   * @param force: forcing to add new block
+   */
+  function AddBlock(pageIndex: number, force = false) {
     setPages((prev) => {
       let draft = [...prev];
       if (!draft[pageIndex]) {
@@ -20,7 +26,10 @@ export default function usePages() {
       } else {
         const blocksLen = draft[pageIndex].blocks.length;
         const lastBLock = draft[pageIndex].blocks[blocksLen - 1];
-        if (lastBLock && lastBLock?.content?.trim()?.length === 0) {
+        const shouldFocusOnLastElement = Boolean(
+          lastBLock && lastBLock?.content?.trim()?.length === 0
+        );
+        if (shouldFocusOnLastElement) {
           focusOnLastBlock(lastBLock._id);
         } else {
           draft[pageIndex].blocks.push(generateBlock());

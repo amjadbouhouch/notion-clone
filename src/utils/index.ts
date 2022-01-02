@@ -22,6 +22,6 @@ export function generateBlock(): Block {
   return {
     _id: generateId(),
     content: "",
-    type: "heading",
+    type: "paragraph",
   };
 }
