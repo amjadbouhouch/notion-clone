@@ -1,21 +1,22 @@
 import { HandIcon, PlusIcon } from "@heroicons/react/outline";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAppContext } from "../hooks/useAppContext";
-import useOnPressOutside from "../hooks/useOnPressOutside";
+import useSelectedPage from "../hooks/useSelectedPage";
 import { Block } from "../types";
-import EditableHeading from "./Block/EditableHeading";
-import EditableParagraph from "./Block/EditableParagraph";
+import { Menu } from "./Block/Menu";
+import Editable from "./Editable";
 interface BlockProps {
   index: number;
   block: Block;
 }
-interface ICommandsPosition {
+interface IMenuPosition {
   isShowing: boolean;
   position: undefined | { x: number; y: number };
 }
 export default function BLockItem({ block, index }: BlockProps) {
-  const { updateBlockContent, AddBlock } = useAppContext();
-  const [showCommands, setShowCommands] = useState<ICommandsPosition>({
+  const { updateBlockContent, AddBlock, updateType } = useAppContext();
+  const selectedPage = useSelectedPage();
+  const [showMenu, setShowMenu] = useState<IMenuPosition>({
     isShowing: false,
     position: undefined,
   });
@@ -40,14 +41,12 @@ export default function BLockItem({ block, index }: BlockProps) {
   //   allowedTags: ["b", "i", "em", "strong", "a", "p", "h1"],
   //   allowedAttributes: { a: ["href"] },
   // };
-  useEffect(() => {
-    // execute("formatBlock", "h1");
-  }, []);
+  useEffect(() => {}, []);
   const closeMenu = () =>
-    setShowCommands({ isShowing: false, position: undefined });
+    setShowMenu({ isShowing: false, position: undefined });
   const openSelectMenuHandler = () => {
     const { x, y } = getCaretCoordinates(block._id);
-    setShowCommands({
+    setShowMenu({
       isShowing: true,
       position: {
         x,
@@ -56,6 +55,8 @@ export default function BLockItem({ block, index }: BlockProps) {
     });
   };
   const onKeyDown = (e) => {
+    console.log("here!", e?.key);
+
     switch (e.key) {
       case "/":
         openSelectMenuHandler();
@@ -64,106 +65,56 @@ export default function BLockItem({ block, index }: BlockProps) {
         break;
     }
   };
-
+  const onSelect = (type) => {
+    setShowMenu({
+      isShowing: false,
+      position: undefined,
+    });
+    updateType(selectedPage!._id, index, type);
+    document.getElementById(block._id)?.focus();
+  };
+  const classNames = useMemo(() => {
+    let classes;
+    if (block.type === "h1") {
+      classes = "text-3xl";
+    } else if (block.type === "h2") {
+      classes = "text-2xl";
+    } else if (block.type === "h3") {
+      classes = "text-base";
+    }
+    return classes;
+  }, [block.type]);
   return (
-    <div className="flex  items-center space-x-2 group px-10">
-      {showCommands.isShowing && (
-        <Menu closeMenu={closeMenu} position={showCommands.position} />
+    <div className="flex items-center px-10 space-x-2 group">
+      {showMenu.isShowing && (
+        <Menu
+          onSelect={onSelect}
+          closeMenu={closeMenu}
+          position={showMenu.position}
+        />
       )}
       <div className="w-12">
-        <div className="hidden  group-hover:flex items-center space-x-2">
+        <div className="items-center hidden space-x-2 group-hover:flex">
           <PlusIcon
             onClick={handleClick}
-            className="w-5 cursor-pointer h-5 text-gray-500"
+            className="w-5 h-5 text-gray-500 cursor-pointer"
           />
           <HandIcon
             onClick={handleClick}
-            className="w-5 cursor-pointer h-5 text-gray-500"
+            className="w-5 h-5 text-gray-500 cursor-pointer"
           />
         </div>
       </div>
 
       <div className="flex-1">
-        {block.type === "paragraph" ? (
-          <EditableParagraph
-            onKeyDown={onKeyDown}
-            block={block}
-            handleChange={handleChange}
-            handleOnBlur={handleOnBlur}
-          />
-        ) : (
-          <EditableHeading
-            onKeyDown={onKeyDown}
-            block={block}
-            handleChange={handleChange}
-            handleOnBlur={handleOnBlur}
-          />
-        )}
-      </div>
-    </div>
-  );
-}
-function Menu({ position, closeMenu }) {
-  const menuRef = useRef(null);
-  const { isClickedOutside } = useOnPressOutside(menuRef);
-  useEffect(() => {
-    if (isClickedOutside) {
-      closeMenu();
-    }
-  }, [isClickedOutside]);
-  const style = {
-    top: position?.y + 19,
-    left: position?.x + 5,
-  };
-  return (
-    <div
-      ref={menuRef}
-      style={style}
-      className="absolute bg-white text-sm w-72 rounded shadow-md border border-gray-200"
-    >
-      <div className="text-gray-600 text-xs p-2 border-b border-b-200">
-        <span>BASIC BLOCKS</span>
-      </div>
-      <div className="overflow-y-auto h-64">
-        <div className="p-2 space-x-2 hover:bg-gray-100 cursor-pointer flex items-center">
-          <div className="w-10 h-10 rounded-sm border shadow border-gray-200"></div>
-          <div className="space-y-2">
-            <label>Text</label>
-            <p className="text-gray-500 text-xs">
-              Just start writing with plain text.
-            </p>
-          </div>
-        </div>
-        <div className="p-2 space-x-2 hover:bg-gray-100 cursor-pointer flex items-center">
-          <div className="w-10 h-10 rounded-sm border shadow border-gray-200"></div>
-          <div className="space-y-2">
-            <label>Heading 1</label>
-            <p className="text-gray-500 text-xs">Big section heading</p>
-          </div>
-        </div>
-        <div className="p-2 space-x-2 hover:bg-gray-100 cursor-pointer flex items-center">
-          <div className="w-10 h-10 rounded-sm border shadow border-gray-200"></div>
-          <div className="space-y-2">
-            <label>Heading 2</label>
-            <p className="text-gray-500 text-xs">Medium section heading</p>
-          </div>
-        </div>
-        <div className="p-2 space-x-2 hover:bg-gray-100 cursor-pointer flex items-center">
-          <div className="w-10 h-10 rounded-sm border shadow border-gray-200"></div>
-          <div className="space-y-2">
-            <label>Heading 3</label>
-            <p className="text-gray-500 text-xs">Small section heading</p>
-          </div>
-        </div>
-        <div className="p-2 space-x-2 hover:bg-gray-100 cursor-pointer flex items-center">
-          <div className="w-10 h-10 rounded-sm border shadow border-gray-200"></div>
-          <div className="space-y-2">
-            <label>Image</label>
-            <p className="text-gray-500 text-xs">
-              Upload or embed with a link.
-            </p>
-          </div>
-        </div>
+        <Editable
+          classNames={classNames}
+          placeholder="Type / for commands"
+          html={block?.content || ""}
+          handleChange={handleChange}
+          onKeyDown={onKeyDown}
+          id={block._id}
+        />
       </div>
     </div>
   );

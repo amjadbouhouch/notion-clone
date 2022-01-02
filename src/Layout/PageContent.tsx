@@ -1,5 +1,4 @@
 import { HomeIcon } from "@heroicons/react/outline";
-import { useParams } from "react-router";
 import BLockItem from "../components/BLockItem";
 import Editable from "../components/Editable";
 import { useAppContext } from "../hooks/useAppContext";
@@ -7,9 +6,6 @@ import useSelectedPage from "../hooks/useSelectedPage";
 import "./style.css";
 
 export default function PageContent() {
-  // get id from url
-  const { id } = useParams<{ id: string }>();
-  const { pages, AddBlock } = useAppContext();
   const selectedPage = useSelectedPage();
   return (
     <div
@@ -47,16 +43,19 @@ const HeaderSection = () => {
           <div className="text-xs text-gray-500">Change cover</div>
         </div>
       </div>
-      {/* title */}
+
       <div className="flex flex-col px-20 mt-10">
+        {/* title */}
         <Editable
           tagName="heading"
           html={selectedPage?.name || ""}
           handleChange={handleChange}
         />
+        {/* Description */}
         <Editable
           tagName="paragraph"
           classNames="text-gray-500"
+          placeholder="Add description"
           html={selectedPage?.description || ""}
           handleChange={handleChangeDescription}
         />

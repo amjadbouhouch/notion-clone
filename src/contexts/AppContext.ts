@@ -17,5 +17,6 @@ export interface AppContextProps {
   /** update title of the page */
   updateTitle: (pageId: string, newTitle: string) => void;
   updateDescription: (pageId: string, newDescription: string) => void;
+  updateType: (pageId: string, blockIndex: number, newType: string) => void;
 }
 export const AppContext = React.createContext({} as AppContextProps);

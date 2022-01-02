@@ -5,6 +5,10 @@ interface Props {
   handleChange: (html: string) => void;
   tagName?: "heading" | "paragraph";
   classNames?: string;
+  placeholder?: string;
+  onKeyDown?: (ev: any) => void;
+  onBlur?: () => void;
+  id?: string;
 }
 interface State {
   html: string;
@@ -20,13 +24,16 @@ export default class Editable extends Component<Props, State> {
   render() {
     return (
       <ContentEditable
+        id={this.props.id}
         className={`w-full h-auto outline-0 ${
           this.props?.tagName === "heading" ? "text-3xl" : "text-cs"
         } ${this.props.classNames}`}
         html={this.props.html}
-        placeholder={"Untitled"}
+        placeholder={this.props.placeholder || "Untitled"}
         disabled={false} // use true to disable editing
         onChange={this.handleChange} // handle innerHTML change
+        onKeyDown={this.props.onKeyDown}
+        onBlur={this.props.onBlur}
       />
     );
   }

@@ -69,7 +69,17 @@ export default function usePages() {
       return draft;
     });
   };
-
+  const updateType = (pageId, blockIndex, newType) => {
+    setPages((prev) => {
+      let draft = [...prev];
+      const pageIndex = draft.findIndex((p) => p._id === pageId);
+      if (~pageIndex) {
+        if (draft[pageIndex])
+          draft[pageIndex].blocks[blockIndex].type = newType;
+      }
+      return draft;
+    });
+  };
   return {
     pages,
     setPages,
@@ -77,5 +87,6 @@ export default function usePages() {
     updateBlockContent,
     updateTitle,
     updateDescription,
+    updateType,
   };
 }

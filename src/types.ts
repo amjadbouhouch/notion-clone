@@ -5,7 +5,7 @@ export interface Page {
   description?: string;
   // icon ....
 }
-type Type = "paragraph" | "heading" | "todo" | "image";
+type Type = "paragraph" | "h1" | "h2" | "h3" | "todo" | "image";
 type Properties = {};
 export interface Block {
   [X: string]: any;
