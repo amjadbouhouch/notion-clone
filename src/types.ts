@@ -5,11 +5,18 @@ export interface Page {
   description?: string;
   // icon ....
 }
-type Type = "paragraph" | "h1" | "h2" | "h3" | "todo" | "image";
+export type BlockType =
+  | "executeCommands"
+  | "paragraph"
+  | "h1"
+  | "h2"
+  | "h3"
+  | "todo"
+  | "image";
 type Properties = {};
 export interface Block {
   [X: string]: any;
-  type: Type;
+  type: BlockType;
   _id: string;
   properties?: Properties;
   // block parent

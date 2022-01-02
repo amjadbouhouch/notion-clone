@@ -1,21 +1,26 @@
 import { HandIcon, PlusIcon } from "@heroicons/react/outline";
 import { useEffect, useMemo, useState } from "react";
-import { useAppContext } from "../hooks/useAppContext";
-import useSelectedPage from "../hooks/useSelectedPage";
+import usePageContext from "../hooks/usePageContext";
 import { Block } from "../types";
 import { Menu } from "./Block/Menu";
 import Editable from "./Editable";
 interface BlockProps {
   index: number;
   block: Block;
+  isLast: boolean;
 }
 interface IMenuPosition {
   isShowing: boolean;
   position: undefined | { x: number; y: number };
 }
-export default function BLockItem({ block, index }: BlockProps) {
-  const { updateBlockContent, AddBlock, updateType } = useAppContext();
-  const selectedPage = useSelectedPage();
+export default function BLockItem({ block, index, isLast }: BlockProps) {
+  const {
+    updateBlockContent,
+    updateType,
+    handleEnterPressed,
+    handleBackspacePressed,
+    page,
+  } = usePageContext();
   const [showMenu, setShowMenu] = useState<IMenuPosition>({
     isShowing: false,
     position: undefined,
@@ -28,7 +33,7 @@ export default function BLockItem({ block, index }: BlockProps) {
     //     position: undefined,
     //   });
     // }
-    // updateBlockContent(pageIndex, index, content);
+    updateBlockContent(index, content);
   }
 
   const handleClick = (e) => {
@@ -55,13 +60,18 @@ export default function BLockItem({ block, index }: BlockProps) {
     });
   };
   const onKeyDown = (e) => {
-    console.log("here!", e?.key);
-
     switch (e.key) {
       case "/":
-        openSelectMenuHandler();
+        if (block.type === "executeCommands") openSelectMenuHandler();
         break;
       case "Enter":
+        if (showMenu.isShowing) {
+          return;
+        }
+        handleEnterPressed(index);
+        break;
+      case "Backspace":
+        handleBackspacePressed(index);
         break;
     }
   };
@@ -70,20 +80,27 @@ export default function BLockItem({ block, index }: BlockProps) {
       isShowing: false,
       position: undefined,
     });
-    updateType(selectedPage!._id, index, type);
+    updateType(index, type);
     document.getElementById(block._id)?.focus();
   };
-  const classNames = useMemo(() => {
-    let classes;
+  const [classNames, placeholder] = useMemo(() => {
+    let classes = "test-sm";
+    let placeholder = "Type / for commands";
     if (block.type === "h1") {
       classes = "text-3xl";
+      placeholder = "Heading 1";
     } else if (block.type === "h2") {
       classes = "text-2xl";
+      placeholder = "Heading 2";
     } else if (block.type === "h3") {
       classes = "text-base";
+      placeholder = "Heading 3";
+    } else if (block.type === "paragraph") {
+      placeholder = "start typing...";
     }
-    return classes;
+    return [classes, placeholder];
   }, [block.type]);
+  // const NotShowPlaceholder = !isLast && page.blocks.length > 1;
   return (
     <div className="flex items-center px-10 space-x-2 group">
       {showMenu.isShowing && (
@@ -106,10 +123,10 @@ export default function BLockItem({ block, index }: BlockProps) {
         </div>
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 hover:bg-gray-100">
         <Editable
           classNames={classNames}
-          placeholder="Type / for commands"
+          placeholder={placeholder}
           html={block?.content || ""}
           handleChange={handleChange}
           onKeyDown={onKeyDown}

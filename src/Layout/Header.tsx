@@ -8,20 +8,19 @@ import {
 } from "@heroicons/react/outline";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import useSelectedPage from "../hooks/useSelectedPage";
+import usePageContext from "../hooks/usePageContext";
+import Editable from "../components/Editable";
 interface HeaderProps {
   isSidebarOpen: boolean;
   toggleSideBar: () => void;
 }
 /** */
 export default function Header({ isSidebarOpen, toggleSideBar }: HeaderProps) {
-  const selectedPage = useSelectedPage();
+  const { page: selectedPage, updateTitle } = usePageContext();
   const history = useHistory();
-  useEffect(() => {
-    if (!selectedPage?._id) {
-      history.push("/");
-    }
-  }, [selectedPage?._id]);
+  const handleChange = (html: string) => {
+    updateTitle(html);
+  };
   return (
     <div className={`flex text-sm p-3 justify-between shadow-sm`}>
       <div className="flex items-center space-x-2">
@@ -32,10 +31,12 @@ export default function Header({ isSidebarOpen, toggleSideBar }: HeaderProps) {
           />
         )}
         <EmojiHappyIcon className="w-5 h-5 text-gray-500" />
-        <span
-          dangerouslySetInnerHTML={{ __html: selectedPage?.name || "" }}
-          className=""
-        ></span>
+        <Editable
+          tagName="paragraph"
+          html={selectedPage?.name || ""}
+          placeholder="Untitled"
+          handleChange={handleChange}
+        />
       </div>
       <div className="flex items-center space-x-3">
         <span>Share</span>

@@ -1,34 +1,37 @@
 import { HomeIcon } from "@heroicons/react/outline";
 import BLockItem from "../components/BLockItem";
 import Editable from "../components/Editable";
-import { useAppContext } from "../hooks/useAppContext";
-import useSelectedPage from "../hooks/useSelectedPage";
+import usePageContext from "../hooks/usePageContext";
 import "./style.css";
 
 export default function PageContent() {
-  const selectedPage = useSelectedPage();
+  const { page } = usePageContext();
   return (
     <div
       className={`flex-grow overflow-y-auto flex  cursor-text flex-col space-y-2`}
     >
       <HeaderSection />
       <div className="flex-1 pt-10">
-        {selectedPage?.blocks?.map((block, index) => (
-          <BLockItem block={block} index={index} key={block._id} />
+        {page?.blocks?.map((block, index) => (
+          <BLockItem
+            isLast={index === page?.blocks.length - 1}
+            block={block}
+            index={index}
+            key={block._id}
+          />
         ))}
       </div>
     </div>
   );
 }
 const HeaderSection = () => {
-  const selectedPage = useSelectedPage();
-  const { updateTitle, updateDescription } = useAppContext();
+  const { updateTitle, updateDescription, page } = usePageContext();
 
   const handleChange = (html: string) => {
-    updateTitle(selectedPage!._id, html);
+    updateTitle(html);
   };
   const handleChangeDescription = (html: string) => {
-    updateDescription(selectedPage!._id, html);
+    updateDescription(html);
   };
 
   return (
@@ -48,15 +51,16 @@ const HeaderSection = () => {
         {/* title */}
         <Editable
           tagName="heading"
-          html={selectedPage?.name || ""}
+          html={page?.name || ""}
+          placeholder="Untitled"
           handleChange={handleChange}
         />
         {/* Description */}
         <Editable
           tagName="paragraph"
-          classNames="text-gray-500"
+          classNames="text-gray-700"
           placeholder="Add description"
-          html={selectedPage?.description || ""}
+          html={page?.description || ""}
           handleChange={handleChangeDescription}
         />
       </div>

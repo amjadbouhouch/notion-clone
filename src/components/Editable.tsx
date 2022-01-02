@@ -29,7 +29,7 @@ export default class Editable extends Component<Props, State> {
           this.props?.tagName === "heading" ? "text-3xl" : "text-cs"
         } ${this.props.classNames}`}
         html={this.props.html}
-        placeholder={this.props.placeholder || "Untitled"}
+        placeholder={this.props?.placeholder}
         disabled={false} // use true to disable editing
         onChange={this.handleChange} // handle innerHTML change
         onKeyDown={this.props.onKeyDown}

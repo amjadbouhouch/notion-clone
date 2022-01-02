@@ -15,10 +15,7 @@ export function generatePage(): Page {
     _id: randomId,
     blocks: Array.from({ length: 1 }).map(generateBlock),
     name: company.bsNoun(),
-    description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia
-    cumque laboriosam dolorem accusamus odio doloremque perspiciatis
-    deserunt, consequatur labore. Modi sequi consequatur cupiditate magni
-    eos tempore facere laboriosam autem dolore.`,
+    description: ``,
   };
 }
 
@@ -26,6 +23,15 @@ export function generateBlock(): Block {
   return {
     _id: generateId(),
     content: "",
-    type: "paragraph",
+    type: "executeCommands",
   };
 }
+
+export const insertNewItemAtIndex = (arr, index, newItem) => [
+  // part of the array before the specified index
+  ...arr.slice(0, index),
+  // inserted item
+  newItem,
+  // part of the array after the specified index
+  ...arr.slice(index),
+];
