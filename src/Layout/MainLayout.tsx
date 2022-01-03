@@ -8,7 +8,7 @@ export default function MainLayout({ isSidebarOpen, toggleSideBar }) {
   const props = usePage();
   return (
     <PageContext.Provider value={props}>
-      <div className="flex flex-col flex-1 h-full overflow-y-auto">
+      <div className="flex w-full overflow-x-auto flex-col flex-1 h-full overflow-y-auto">
         <Header isSidebarOpen={isSidebarOpen} toggleSideBar={toggleSideBar} />
         <PageContent />
       </div>

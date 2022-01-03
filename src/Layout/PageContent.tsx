@@ -1,5 +1,5 @@
 import { HomeIcon } from "@heroicons/react/outline";
-import BLockItem from "../components/BLockItem";
+import BLockItem from "../components/BlockItem";
 import Editable from "../components/Editable";
 import usePageContext from "../hooks/usePageContext";
 import "./style.css";

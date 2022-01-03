@@ -15,7 +15,7 @@ function App() {
     <Suspense fallback={<FallBackSuspense />}>
       <AppContext.Provider value={{ pages }}>
         <BrowserRouter>
-          <div className="flex flex-1 w-screen h-screen">
+          <div className="flex overflow-x-hidden flex-1 w-screen h-screen">
             {/* Side bar */}
             <SideBar
               isSidebarOpen={isSidebarOpen}

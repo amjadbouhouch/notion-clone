@@ -1,9 +1,10 @@
 import { HandIcon, PlusIcon } from "@heroicons/react/outline";
 import { useEffect, useMemo, useState } from "react";
-import usePageContext from "../hooks/usePageContext";
-import { Block } from "../types";
-import { Menu } from "./Block/Menu";
-import Editable from "./Editable";
+import { getCaretCoordinates } from "../../utils";
+import usePageContext from "../../hooks/usePageContext";
+import { Block } from "../../types";
+import { Menu } from "./Menu";
+import Editable from "./../Editable";
 interface BlockProps {
   index: number;
   block: Block;
@@ -13,6 +14,10 @@ interface IMenuPosition {
   isShowing: boolean;
   position: undefined | { x: number; y: number };
 }
+const DEFAULT_MENU_STATE = {
+  isShowing: false,
+  position: undefined,
+};
 export default function BLockItem({ block, index, isLast }: BlockProps) {
   const {
     updateBlockContent,
@@ -21,24 +26,21 @@ export default function BLockItem({ block, index, isLast }: BlockProps) {
     handleBackspacePressed,
     page,
   } = usePageContext();
-  const [showMenu, setShowMenu] = useState<IMenuPosition>({
-    isShowing: false,
-    position: undefined,
-  });
+  const [showMenu, setShowMenu] = useState<IMenuPosition>(DEFAULT_MENU_STATE);
   /** content html string */
   function handleChange(content: string) {
-    // if (showCommands.isShowing) {
-    //   setShowCommands({
-    //     isShowing: false,
-    //     position: undefined,
-    //   });
-    // }
+    if (showMenu.isShowing) {
+      if (content.trim().length === 0) {
+        setShowMenu(DEFAULT_MENU_STATE);
+      }
+    }
     updateBlockContent(index, content);
   }
 
   const handleClick = (e) => {
     e.stopPropagation();
   };
+  /** */
   const handleOnBlur = () => {
     // AddBlock(pageIndex, true);
   };
@@ -47,8 +49,10 @@ export default function BLockItem({ block, index, isLast }: BlockProps) {
   //   allowedAttributes: { a: ["href"] },
   // };
   useEffect(() => {}, []);
+  /** */
   const closeMenu = () =>
     setShowMenu({ isShowing: false, position: undefined });
+  /** */
   const openSelectMenuHandler = () => {
     const { x, y } = getCaretCoordinates(block._id);
     setShowMenu({
@@ -136,25 +140,7 @@ export default function BLockItem({ block, index, isLast }: BlockProps) {
     </div>
   );
 }
-const getCaretCoordinates = (elemId: string) => {
-  let x, y;
-  const selection = window.getSelection();
 
-  if (selection && selection.rangeCount !== 0) {
-    const range = selection.getRangeAt(0).cloneRange();
-    // range.collapse(false);
-    const rect = range.getClientRects()[0];
-
-    if (rect) {
-      x = rect.left;
-      y = rect.top;
-    } else {
-      x = document.getElementById(elemId)!.getBoundingClientRect().x;
-      y = document.getElementById(elemId)!.getBoundingClientRect().top;
-    }
-  }
-  return { x, y };
-};
 // TODO
 // function execute(cmd: string, arg?: string) {
 //   document.execCommand(cmd, false, arg);

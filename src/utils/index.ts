@@ -35,3 +35,23 @@ export const insertNewItemAtIndex = (arr, index, newItem) => [
   // part of the array after the specified index
   ...arr.slice(index),
 ];
+/** */
+export const getCaretCoordinates = (elemId: string) => {
+  let x, y;
+  const selection = window.getSelection();
+
+  if (selection && selection.rangeCount !== 0) {
+    const range = selection.getRangeAt(0).cloneRange();
+    // range.collapse(false);
+    const rect = range.getClientRects()[0];
+
+    if (rect) {
+      x = rect.left;
+      y = rect.top;
+    } else {
+      x = document.getElementById(elemId)!.getBoundingClientRect().x;
+      y = document.getElementById(elemId)!.getBoundingClientRect().top;
+    }
+  }
+  return { x, y };
+};
