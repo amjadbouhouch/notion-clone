@@ -62,10 +62,7 @@ const HeaderSection = () => {
           onChange={handleChange} // handle innerHTML change
         />
         <label className="text-sm text-gray-500">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia
-          cumque laboriosam dolorem accusamus odio doloremque perspiciatis
-          deserunt, consequatur labore. Modi sequi consequatur cupiditate magni
-          eos tempore facere laboriosam autem dolore.
+          page data
         </label>
       </div>
     </div>

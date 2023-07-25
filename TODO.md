@@ -1,0 +1,9 @@
+- private and favorites' section collapsible
+- clickable private and favorite tab
+- total scrollable bar
+- icons with page
+- 4 sections for:
+  - create a teamspace
+  - templates
+  - import
+  - trash
